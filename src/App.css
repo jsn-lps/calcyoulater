@@ -1,16 +1,87 @@
 * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* border: 1px solid black; */
+}
+
+:root {
+  --tea: #DEEFB7;
+  --celadon: #98DFAF;
+  --Keppel: #5FB49C;
+  --dsblue: #414288;
+  --palpur: #682D63;
+
+}
+
+.Page {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+}
+
+.CalcBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 440px;
+  height: 630px;
+  margin: auto;
+  /* padding: 14px 0px; */
+  border-radius: 11px;
+  background-color: var(--tea);
   border: 1px solid black;
 }
 
+#display {
+  display: flex;
+  font-size: 4rem;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  height: 17%;
+  margin: auto;
+  padding: 3%;;
+  background-color: rgb(23, 23, 23);
+  color: white;
+  border-radius: 10px 10px 0 0;
+}
 
+#button-area {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 1.5%;
+  column-gap: 1.5%;
+  padding: 2% 0;
+  flex: auto;
+  width: 95%;
+  height: 81%;
+  margin: auto;
+  
+}
 
+.Button {
+  font-size: 1.2rem;
+  margin: 0;
+  padding: 0;
+  border-radius: 10px;
+  border: .5px solid black
+}
 
+#add {
+  grid-area: 2/4/4/5;
+  background-color: var(--celadon);
+}
 
+#equals {
+  grid-row-start: 4;
+  grid-row-end: 6;
+  grid-column-start: 4;
+  grid-column-end: 5;
+  background-color: var(--dsblue);
+  color: var(--tea);
 
-
-
-
-
+}
 
 
 
