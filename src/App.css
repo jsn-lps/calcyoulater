@@ -68,9 +68,18 @@
   border: .5px solid black
 }
 
+.Button:active {
+  background-color: white;
+}
+
+
 #add {
   grid-area: 2/4/4/5;
   background-color: var(--celadon);
+}
+
+#add:active {
+background-color: #a3ebd7;
 }
 
 #equals {
@@ -80,9 +89,11 @@
   grid-column-end: 5;
   background-color: var(--dsblue);
   color: var(--tea);
-
 }
 
+#equals:active {
+  background-color: #5b5d9e;
+}
 
 
 
