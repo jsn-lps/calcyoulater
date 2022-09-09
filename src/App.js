@@ -1,8 +1,10 @@
-import { useContext, useState, useEffect, createContext } from 'react';
+import { useContext, useState, createContext } from 'react';
 import './App.css';
 import React from 'react';
 
 const DisplayContext = createContext({});
+let clearDisplay = false; // toggle for display
+
 
 const Display = () => {
   const { display } = useContext(DisplayContext);
@@ -14,9 +16,17 @@ const Display = () => {
 }
 
 const NumPad = () => {
-  const { display } = useContext(DisplayContext);
+  const { display, operator, setOperator, setDisplay, prevNum, setPrevNum } = useContext(DisplayContext);  console.log(display)
+  
+  const btnClicked = (e) => {
 
-  const btnClicked = (e) => HandleButton(e, "value");
+    HandleButton(e, 
+      display,
+      setDisplay,
+      operator,
+      setOperator,
+      prevNum,
+      setPrevNum);}
 
   return (
     <div id="button-area">
@@ -43,38 +53,85 @@ const NumPad = () => {
 }
 
 
-const HandleButton = (e) => {
-  const { answer, setAnswer, setDisplay } = useContext(DisplayContext);
-
-  console.log(e.target.value);
+const HandleButton = (e, display, setDisplay, operator, setOperator, prevNum, setPrevNum) => {
   let btnInput = e.target.value;
 
-  if (e.target.value === "=") {
-    setAnswer(0);
+  // console.log(clearDisplay)
+
+  // clear button
+  if (btnInput === "clear") {
     setDisplay(0);
-  } else if (parseInt(btnInput)) {
-      btnInput = parseInt(btnInput);
-    } 
-  setAnswer(answer + e.target.value)
+    setOperator(null);
+    setPrevNum(null);
+    clearDisplay = false;
+
+    // number input handling
+  } else if (parseInt(btnInput) || btnInput == 0 || btnInput == ".") {
+    
+      if (display == 0 || clearDisplay) { // if display == 0 set display to number input
+        setDisplay(btnInput);
+        clearDisplay = false;
+      } else {
+        if (btnInput == "." && display % 1 != 0){ // NO REPEATED DECIMALS
+          return
+        }
+        setDisplay(display + btnInput);
+      }
+      
+      // operator handling
+  } else if (btnInput === "+") {
+    setOperator("+");
+    setPrevNum(display)
+    clearDisplay = true;
+
+  } else if (btnInput === "-") {
+    setOperator("-");
+    setPrevNum(display)
+    clearDisplay = true;
+
+  } else if (btnInput === "x") {
+    setOperator("x");
+    setPrevNum(display)
+    clearDisplay = true;
+    
+  } else if (btnInput === "/") {
+    setOperator("/");
+    setPrevNum(display)
+    clearDisplay = true;  
+
+    // equals handling
+  } else if (btnInput === "=") {
+    switch(true) {
+      case (operator === "+"):
+        setDisplay(parseFloat(prevNum) + parseFloat(display));
+        break;
+      case (operator === "-"):
+        setDisplay(parseFloat(prevNum) - parseFloat(display));
+        break;
+      case (operator === "x"):
+        setDisplay(parseFloat(prevNum) * parseFloat(display));
+        break;
+      case (operator === "/"):
+        setDisplay(parseFloat(prevNum) / parseFloat(display));
+        break;
+      }
+    }
   }
 
 
 
 
-
+///////////////////////////////////////////
 
 function App() {
-
   const [display, setDisplay] = useState(0);
-
-  const [answer, setAnswer] = useState(null);
-
-
+  const [operator, setOperator] = useState(null);
+  const [prevNum, setPrevNum] = useState(null);
 
   return (
     <div className="Page">
       <div className="CalcBody">
-        <DisplayContext.Provider value={{display, setDisplay, answer, setAnswer}}>
+        <DisplayContext.Provider value={{display, setDisplay, operator, setOperator, prevNum, setPrevNum}}>
           <Display />
           <NumPad />
         </DisplayContext.Provider>
