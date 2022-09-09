@@ -8,6 +8,8 @@ let runTotal = null;
 let numerator = null;
 let operator = null;
 let afterEquals = false;
+let isNegative = false;
+let canBeNegative = false;
 
 const Display = () => {
   const { display } = useContext(DisplayContext);
@@ -19,8 +21,7 @@ const Display = () => {
 }
 
 const NumPad = () => {
-  const { display, setDisplay, prevNum, setPrevNum, operand, setOperand } = useContext(DisplayContext);  
-  // console.log(display)
+  const { display, setDisplay, operand, setOperand } = useContext(DisplayContext);  
   
   const btnClicked = (e) => {
     
@@ -55,10 +56,13 @@ const NumPad = () => {
   )
 }
 
-const DoMath = (display, setDisplay) => {
+const DoMath = (display, setDisplay, isNegative) => {
   clearDisplay = true;
-  numerator = parseFloat(display);
-
+  if (isNegative == true) {
+    numerator = -Math.abs(parseFloat(display));
+    } else {
+    numerator = parseFloat(display);
+    }
   switch(true) {
     case (operator === "+"):
       runTotal = runTotal + numerator;
@@ -92,9 +96,12 @@ const HandleButton = (e, display, setDisplay, operand, setOperand, prevNum, setP
     numerator = null;
     clearDisplay = false;
     afterEquals = false;
+    isNegative = false;
+    canBeNegative = false;
 
     // number input handling
   } else if (parseInt(btnInput) || btnInput == 0 || btnInput == ".") {
+    canBeNegative = false;
       if (display == 0 || clearDisplay) { // if display == 0 set display to number input
 
         setDisplay(btnInput);
@@ -111,44 +118,52 @@ const HandleButton = (e, display, setDisplay, operand, setOperand, prevNum, setP
       }
 
   } else if (btnInput === "+" || btnInput === "-" || btnInput === "x" || btnInput === "/") {
+// this challenge wanted the minus sing to double as a negative sign so... things got weird
+   if (btnInput == "-" && canBeNegative == true && isNegative == false) {
+    isNegative = true;
+   } else {
+    canBeNegative = true;
+    isNegative = false;
     if (afterEquals == true) {
       afterEquals = false;
       runTotal = parseFloat(display);
       operator = btnInput;
       clearDisplay = true;
     } else {
-    if (runTotal == null) {
+    if (runTotal == null || clearDisplay == true) {
       runTotal = parseFloat(display);
       clearDisplay = true;
       operator = btnInput;
-
     } else {
-      DoMath(parseFloat(display), setDisplay)
-
+      DoMath(parseFloat(display), setDisplay, isNegative)
       operator = btnInput;
     }
   }
+  }
 
   } else if (btnInput === "=") {
-    DoMath(parseFloat(display), setDisplay);
+    DoMath(parseFloat(display), setDisplay, isNegative);
     afterEquals = true;
     }
-    console.log("run total " + runTotal);
-    console.log("operator " + operator);
-    console.log("numerator " + numerator);
-    console.log("afterEquals is " + afterEquals)
+    // lots and lots of debugging
+    // console.log("run total " + runTotal);
+    // console.log("operator " + operator);
+    // console.log("numerator " + numerator);
+    // // console.log("afterEquals is " + afterEquals)
+    // console.log("isNegative is " + isNegative)
+    // console.log("canBeNegativee is " + canBeNegative)
+    // console.log("_____________")
   }
 
 ///////////////////////////////////////////
 
 function App() {
   const [display, setDisplay] = useState(0);
-  const [operand, setOperand] = useState(null);
 
   return (
     <div className="Page">
       <div className="CalcBody">
-        <DisplayContext.Provider value={{display, setDisplay, operand, setOperand}}>
+        <DisplayContext.Provider value={{display, setDisplay}}>
           <Display />
           <NumPad />
         </DisplayContext.Provider>
