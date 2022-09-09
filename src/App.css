@@ -27,7 +27,6 @@
   width: 440px;
   height: 630px;
   margin: auto;
-  /* padding: 14px 0px; */
   border-radius: 11px;
   background-color: var(--tea);
   border: 1px solid black;
@@ -68,18 +67,27 @@
   border: .5px solid black
 }
 
+#neg {
+  background-color: #98DFAF;
+}
+
+#neg:active {
+  background-color: #b4f0c7;
+}
+
 .Button:active {
   background-color: white;
 }
 
 
-#add {
-  grid-area: 2/4/4/5;
-  background-color: var(--celadon);
+#clear {
+  background-color: #e75e57;
+  color: white;
+  font-weight: bold;
 }
 
-#add:active {
-background-color: #a3ebd7;
+#clear:active {
+  background-color: #c54a43;
 }
 
 #equals {
